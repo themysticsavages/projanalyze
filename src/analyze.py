@@ -3,7 +3,12 @@ import json
 import os
 import re
 
-def download(url:str, file:str):
+def fetch(id:str):
+    '''
+    Fetch all costumes and sounds used in a project
+    '''
+    
+    def download(url:str, file:str):
         r = requests.get(url, stream=True)
 
         if r.status_code == 200:
@@ -12,10 +17,6 @@ def download(url:str, file:str):
                     f.write(chunk)
             f.close()
 
-def fetch(file:str, id:str):
-    '''
-    Fetch all costumes and sounds used in a project
-    '''
     os.chdir(os.getcwd())
 
     if not os.path.exists('./assets'):
@@ -24,18 +25,20 @@ def fetch(file:str, id:str):
     r = requests.get('https://projects.scratch.mit.edu/{}'.format(id), stream=True)
 
     if r.status_code == 200:
-        with open(file+'.json', 'wb') as f:
+        with open('./project.json', 'wb') as f:
             for chunk in r.iter_content(1024):
                 f.write(chunk)
         f.close()
     else:
         return requests.exceptions.RequestException
 
-    with open(file+'.json', 'r') as f:
+    with open('./project.json', 'r') as f:
         JSON = json.loads(f.read())
     f.close()
 
     i = 0
+    flds = []
+
     while True:
         try:
             cst = JSON['targets'][i]['costumes'][0]
@@ -50,10 +53,12 @@ def fetch(file:str, id:str):
             r = download('https://cdn.assets.scratch.mit.edu/internalapi/asset/{}/get'.format(cst['md5ext']), fld+'/'+cst['name']+'.'+cst['dataFormat'])
 
             i += 1
+            flds.append(fld+'/'+cst['name']+'.'+cst['dataFormat'])
         except IndexError:
             break
     
     i = 0
+
     while True:
         try:
             snd = JSON['targets'][i]['sounds'][0]
@@ -68,7 +73,9 @@ def fetch(file:str, id:str):
             r = download('https://cdn.assets.scratch.mit.edu/internalapi/asset/{}/get'.format(snd['md5ext']), fld+'/'+snd['name']+'.'+snd['dataFormat'])
 
             i += 1
+            flds.append(fld+'/'+snd['name']+'.'+snd['dataFormat'])
         except IndexError:
             break
     
     os.remove('./project.json')
+    return flds

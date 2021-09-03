@@ -1,4 +1,22 @@
+from src.exceptions import InvalidInt
 from src.analyze import *
+import src.html
+import argparse
 
-id = str(input('Enter a project ID: '))
-fetch('project', id)
+parser = argparse.ArgumentParser(description='Throw together all the assets of a Scratch projects as local files.')
+
+parser.add_argument('--html', action='store', help='Create an HTML file showing all the assets in one place. Creates in local directory.')
+parser.add_argument('--id', help='Project ID for fetching assets. Totally required!', required=True)
+
+args = parser.parse_args()
+
+if int(args.id) <= 142:
+    raise InvalidInt(message='You need a project ID higher than 142! Projects before this ID do not exist.')
+else:
+    res = fetch(str(args.id))
+    if args.html:
+        try:
+            args.html.split('//')[1] == 'popex'
+            src.html.use(res).create(str(args.html).split('//')[0], popex=True)
+        except IndexError:    
+            src.html.use(res).create(str(args.html))
