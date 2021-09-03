@@ -22,6 +22,7 @@ def fetch(id:str):
     if not os.path.exists('./assets'):
         os.mkdir('./assets')
 
+    print('Fetching project.json for project...')
     r = requests.get('https://projects.scratch.mit.edu/{}'.format(id), stream=True)
 
     if r.status_code == 200:
@@ -39,6 +40,7 @@ def fetch(id:str):
     i = 0
     flds = []
 
+    print('Iterating through json for costumes and names...')
     while True:
         try:
             cst = JSON['targets'][i]['costumes'][0]
@@ -56,9 +58,10 @@ def fetch(id:str):
             flds.append(fld+'/'+cst['name']+'.'+cst['dataFormat'])
         except IndexError:
             break
-    
+
     i = 0
 
+    print('Iterating through json for sounds and names...')
     while True:
         try:
             snd = JSON['targets'][i]['sounds'][0]
