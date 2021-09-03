@@ -1,4 +1,7 @@
 # projanalyze
+
+<img src="https://raw.githubusercontent.com/ajskateboarder/stuff/main/42t987yhr9845yh.png" height="300">
+
 Cool script to fetch Scratch project assets in Python!
 
 ## What it basically does
