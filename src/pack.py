@@ -8,7 +8,7 @@ class use:
         self.content = content
     def create(self, file, popex=False):
         '''Assemble HTML'''
-        html = ''
+        html = '<body style="background-color: #404040; color: white; font-family: "Open Sans"; font-style: normal;"> <h1>All found assets for project</h1> <p>May not be 100% accurate!</p> <br><br>'
 
         print('Generating HTML file as requested...')
         for cnt in self.content:
@@ -22,7 +22,7 @@ class use:
         
         os.chdir(os.getcwd())
         open(file, 'w').write(html)
-        return html
+        return html+'</body>'
 
 def zip():
     warnings.filterwarnings('ignore')
